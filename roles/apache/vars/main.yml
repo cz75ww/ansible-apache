@@ -1,0 +1,5 @@
+---
+# vars file for apache
+http_host: mydomain.local
+http_conf: mydomain.local.conf
+http_port: "80"

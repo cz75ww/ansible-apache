@@ -24,13 +24,26 @@
   pip:
     name: boto3
 
+- name: Ensure group "somegroup" exists
+  ansible.builtin.group:
+    name: nginx
+    state: present
+
+- name: Add the user 'nginx' 
+  ansible.builtin.user:
+    name: nginx
+    shell: /bin/bash
+    groups: root,nginx
+    append: yes
+
 - name: create web diretory
   file:
-    path: /var/www/{{ domain }}
+    path: /var/www/html/{{ domain }}
     state: directory
     mode: '0775'
-    owner: "ubuntu"
-    group: "ubuntu"
+    owner: "nginx"
+    group: "nginx"
+  
 
 - name: delete default nginx site
   file:
@@ -45,9 +58,9 @@
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: ../file/index.html
-    dest: /var/www/html/
-    owner: "ubuntu"
-    group: " ubuntu"
+    dest: /var/www/html/{{ domain }}
+    owner: "nginx"
+    group: "nginx"
     mode: '0644'
   notify: 
     - restart nginx service
