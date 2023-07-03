@@ -62,5 +62,13 @@
     owner: "nginx"
     group: "nginx"
     mode: '0644'
-  notify: 
-    - restart nginx service
+
+- name: Restart service nginx, in all cases
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
+- name: Enable service httpd, and not touch the state
+  ansible.builtin.service:
+    name: nginx
+    enabled: yes
