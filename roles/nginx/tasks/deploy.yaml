@@ -29,8 +29,8 @@
     path: /var/www/{{ domain }}
     state: directory
     mode: '0775'
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "ubuntu"
+    group: "ubuntu"
 
 - name: delete default nginx site
   file:
@@ -45,34 +45,9 @@
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: ../file/index.html
-    dest: /var/www/{{ domain }}
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    dest: /var/www/html/
+    owner: "ubuntu"
+    group: " ubuntu"
     mode: '0644'
   notify: 
     - restart nginx service
-
-- name: Getting the public ip address
-  ansible.builtin.command:
-    /usr/bin/curl "{{ check_public_ip }}"
-  register: public_ip_result
-
-- name: Setting the public ip address in a variable
-  set_fact:
-    vm_public_ip: "{{ public_ip_result.stdout }}"
-
-- name: Checking webpage status
-  ansible.builtin.command:
-    /usr/bin/curl --write-out %{http_code} --silent --output /dev/null "{{ vm_public_ip }}"
-  ignore_errors: yes
-  register: web_page_status
-
-- name: Webpage restarted sucessfully
-  debug:
-    msg: " The web page has been started sucessfully RC: {{ web_page_status.stdout }}"
-  when: web_page_status.stdout == "200"
-
-- name: Webpage issue
-  debug:
-    msg: " The web page issue RC: {{ web_page_status.stdout }}"
-  when: web_page_status.stdout != "200"
