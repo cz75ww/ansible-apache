@@ -7,3 +7,8 @@
 
   roles:
   - ./roles/nginx
+  tags: nginx
+
+  - ./roles/apache
+  tags: apache
+
